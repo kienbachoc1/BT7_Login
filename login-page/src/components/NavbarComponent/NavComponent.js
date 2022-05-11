@@ -15,13 +15,14 @@ import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import About from "../../pages/About/About";
+import { NavLink } from "react-router-dom";
 
 const drawerWidth = 240;
 
 function NavComponent(props) {
-  const { window } = props;
+  const { window, title } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [active, setActive] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -32,26 +33,28 @@ function NavComponent(props) {
       <Toolbar />
       <Divider />
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
+        {["home", "about", "product", "login"].map((text, index) => (
+          <NavLink
+            to={`/${text}`}
+            style={{ color: "#000", textDecoration: "none" }}
+            className={({ isActive }) => (isActive ? "link-active" : "link")}
+          >
+            <ListItem
+              button
+              key={text}
+              sx={active && { background: "#c8e4fd " }}
+            >
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText
+                primary={`${text.charAt(0).toUpperCase()}${text.slice(1)}`}
+              />
+            </ListItem>
+          </NavLink>
         ))}
       </List>
       <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
     </div>
   );
 
@@ -79,7 +82,7 @@ function NavComponent(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Responsive drawer
+            {title}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -120,17 +123,6 @@ function NavComponent(props) {
         >
           {drawer}
         </Drawer>
-      </Box>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-        }}
-      >
-        <Toolbar />
-        <About />
       </Box>
     </Box>
   );
