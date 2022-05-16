@@ -1,29 +1,17 @@
-import { Container } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box, Container } from "@mui/material";
 import React from "react";
-import { Route } from "react-router-dom";
-import NavComponent from "../components/NavbarComponent/NavComponent";
+import { Outlet } from "react-router";
+import Header from "../components/Header/Header";
 
-export default function HomeTemplate(props) {
-  let { Component, path, title } = props;
-
-  const renderComponent = (propsRoute) => {
-    return <Component {...propsRoute} />;
-  };
+export default function HomeTemplate() {
   return (
-    <Route
-      exact
-      path={path}
-      render={(propsRoute) => {
-        return (
-          <div>
-            <NavComponent title={title} />
-            <Box pt={10} pr={10}>
-              <Container maxWidth="md">{renderComponent(propsRoute)}</Container>
-            </Box>
-          </div>
-        );
-      }}
-    />
+    <>
+      <Header />
+      <Container>
+        <Box pt={3}>
+          <Outlet />
+        </Box>
+      </Container>
+    </>
   );
 }

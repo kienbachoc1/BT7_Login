@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useHistory } from "react-router-dom";
-import { Button, IconButton } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
+import { Button } from "@mui/material";
 
 export default function Detail(props) {
   const [prods, setProds] = useState([]);
-  const history = useHistory();
+  const navigate = useNavigate();
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("products"));
     if (data) {
       setProds(data);
     }
   }, []);
-  let idProd = props.match.params.id;
+
+  let { id } = useParams();
 
   const renderProduct = () => {
     let result = prods
-      .filter((prod) => prod.id == idProd)
+      .filter((prod) => prod.id === +id)
       .map((prod, index) => (
         <ul key={index}>
           <li>Id: {prod.id}</li>
@@ -35,7 +36,7 @@ export default function Detail(props) {
       {renderProduct()}
       <Button
         onClick={() => {
-          history.push("/product");
+          navigate("/product", { replace: true });
         }}
       >
         <ArrowBackIcon color="primary" />

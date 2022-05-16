@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { DataGrid } from "@mui/x-data-grid";
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Product(props) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [prods, setProd] = useState([
     {
       id: 1,
@@ -54,8 +53,8 @@ export default function Product(props) {
     localStorage.setItem("products", JSON.stringify(prods));
   }, [prods]);
 
-  const onClickButtonEdit = (id, e) => {
-    history.push(`/detail/${id}`);
+  const onClickButtonEdit = (id) => {
+    navigate(`/detail/${id}`, { replace: true });
   };
 
   return (
@@ -85,7 +84,7 @@ export default function Product(props) {
                 <IconButton onClick={() => onClickButtonEdit(prod.id)}>
                   <EditIcon color="primary" />
                 </IconButton>
-                <IconButton onClick={console.log("delete")}>
+                <IconButton>
                   <DeleteIcon color="error" />
                 </IconButton>
               </td>

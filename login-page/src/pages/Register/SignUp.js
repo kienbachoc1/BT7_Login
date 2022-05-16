@@ -16,12 +16,12 @@ import {
   Stack,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import InputText from "../../components/InputText/InputText";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const schema = yup
   .object({
@@ -49,9 +49,10 @@ const schema = yup
   .required();
 
 export default function SignUp(props) {
-  const history = useHistory();
+  let { setIsLogged } = props;
+  const navigate = useNavigate();
   const [disable, setDisable] = useState(false);
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState({});
 
   const {
     register,
@@ -75,12 +76,39 @@ export default function SignUp(props) {
     mode: "onBlur",
   });
 
-  const onSubmit = (data, e) => {
-    history.push("/home");
-    e.preventDefault();
-    setUser([...user, data]);
+  //==================================================================================
+  // useEffect(() => {
+  //   localStorage.setItem("user", JSON.stringify(user));
+  // }, [user]);
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("user"));
+    if (data) {
+      setUser(data);
+    }
+  }, []);
 
-    console.log(data);
+  //==================================Default================================================
+  useEffect(() => {
+    reset({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phone: user.phone,
+      email: user.email,
+      hobby: user.hobby,
+      gender: user.gender,
+      password: user.password,
+      confirmPassword: user.confirmPassword,
+    });
+  }, [user]);
+  console.log("data", user);
+
+  const onSubmit = (data) => {
+    if (data) {
+      navigate("/home", { replace: true });
+      setUser(data);
+      setIsLogged(true);
+      localStorage.setItem("user", JSON.stringify(data));
+    }
   };
   return (
     <div>
@@ -92,26 +120,34 @@ export default function SignUp(props) {
               <InputText
                 yub={{ ...register("firstName") }}
                 errors={!!errors?.firstName}
-                name="First Name"
+                name="firstName"
+                label="First Name"
+                control={control}
                 message={errors?.firstName ? errors.firstName.message : null}
               />
 
               <InputText
                 yub={{ ...register("lastName") }}
                 errors={!!errors?.lastName}
-                name="Last Name"
+                label="Last Name"
+                name="lastName"
+                control={control}
                 message={errors?.lastName ? errors.lastName.message : null}
               />
               <InputText
                 yub={{ ...register("phone") }}
                 errors={!!errors?.phone}
-                name="Phone"
+                label="Phone"
+                name="phone"
+                control={control}
                 message={errors?.phone ? errors.phone.message : null}
               />
               <InputText
                 yub={{ ...register("email") }}
+                name="email"
+                control={control}
                 errors={!!errors?.email}
-                name="Email"
+                label="Email"
                 message={errors?.email ? errors.email.message : null}
               />
               <Grid container spacing={0}>
@@ -223,15 +259,19 @@ export default function SignUp(props) {
               <InputText
                 yub={{ ...register("password") }}
                 type={"password"}
+                name="password"
+                control={control}
                 errors={!!errors?.password}
-                name="Password"
+                label="Password"
                 message={errors?.password ? errors.password.message : null}
               />
               <InputText
                 yub={{ ...register("confirmPassword") }}
                 type={"password"}
+                name="confirmPassword"
+                control={control}
                 errors={!!errors?.confirmPassword}
-                name="Confirm Password"
+                label="Confirm Password"
                 message={
                   errors?.confirmPassword
                     ? errors.confirmPassword.message
@@ -250,7 +290,17 @@ export default function SignUp(props) {
               variant="contained"
               fullWidth
               onClick={() => {
-                reset();
+                reset({
+                  firstName: "",
+                  lastName: "",
+                  phone: "",
+                  email: "",
+                  hobby: "",
+                  // hobby1: "",
+                  gender: "",
+                  password: "",
+                  confirmPassword: "",
+                });
               }}
             >
               Reset

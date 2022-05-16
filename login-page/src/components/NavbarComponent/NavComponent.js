@@ -35,15 +35,12 @@ function NavComponent(props) {
       <List>
         {["home", "about", "product", "login"].map((text, index) => (
           <NavLink
+            key={index}
             to={`/${text}`}
             style={{ color: "#000", textDecoration: "none" }}
             className={({ isActive }) => (isActive ? "link-active" : "link")}
           >
-            <ListItem
-              button
-              key={text}
-              sx={active && { background: "#c8e4fd " }}
-            >
+            <ListItem button key={text}>
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>

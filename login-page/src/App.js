@@ -1,40 +1,30 @@
 import "./App.css";
-import { Router, Switch, Route } from "react-router-dom";
-import { createBrowserHistory } from "history";
 import SignUp from "./pages/Register/SignUp";
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
-import HomeTemplate from "./templates/HomeTemplate";
 import Product from "./pages/Product/Product";
 import Detail from "./pages/Detail/Detail";
-export const history = createBrowserHistory();
+import { Route, Routes } from "react-router-dom";
+import HomeTemplate from "./templates/HomeTemplate";
+import { useState } from "react";
+import PrivateRoute from "./components/Route/PrivateRoute";
 
 function App(props) {
+  const [islogged, setIsLogged] = useState(!!localStorage?.getItem("user"));
   return (
-    <Router history={history} className="App">
-      <Switch>
-        <Route exact path="/">
-          <SignUp />
+    <Routes>
+      <Route path="/login" element={<SignUp setIsLogged={setIsLogged} />} />
+      <Route path="/" element={<SignUp setIsLogged={setIsLogged} />} />
+      <Route element={<PrivateRoute isLogged={islogged} />}>
+        <Route element={<HomeTemplate />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/product" element={<Product />} />
+          <Route path="/detail/:id" element={<Detail />} />
         </Route>
-        <Route exact path="/login">
-          <SignUp />
-        </Route>
-        <HomeTemplate exact path="/home" Component={Home} title="Home" />
-        <HomeTemplate exact path="/about" Component={About} title="About" />
-        <HomeTemplate
-          exact
-          path="/product"
-          Component={Product}
-          title="Product"
-        />
-        <HomeTemplate
-          exact
-          path="/detail/:id"
-          Component={Detail}
-          title="Detail"
-        />
-      </Switch>
-    </Router>
+      </Route>
+      <Route path="/*" element={<h1>There's nothing here: 404!</h1>} />
+    </Routes>
   );
 }
 
