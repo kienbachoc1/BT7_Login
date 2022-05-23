@@ -1,64 +1,43 @@
 import React, { useEffect, useState } from "react";
-import { IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from "react-router-dom";
+//redux
+import { useSelector, useDispatch } from "react-redux";
+import { productsSelector } from "../../redux/selectors";
+import productsSlice from "../../redux/reducers/productsSlice";
 
 export default function Product(props) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [prods, setProd] = useState([
-    {
-      id: 1,
-      name: "Galaxy S10",
-      quantity: "Korean",
-      price: 10000000,
-      details: "new product",
-      supplier: "samsung",
-    },
-    {
-      id: 2,
-      name: "iphone 11",
-      quantity: "USA",
-      price: 11000000,
-      details: "new product",
-      supplier: "apple",
-    },
-    {
-      id: 3,
-      name: "Galaxy a11",
-      quantity: "Korean",
-      price: 2000000,
-      details: "new product",
-      supplier: "samsung",
-    },
-    {
-      id: 4,
-      name: "ipad 11",
-      quantity: "USA",
-      price: 10000000,
-      details: "new product",
-      supplier: "apple",
-    },
-    {
-      id: 5,
-      name: "Galaxy S20",
-      quantity: "Korean",
-      price: 20000000,
-      details: "new product",
-      supplier: "samsung",
-    },
-  ]);
 
-  useEffect(() => {
-    localStorage.setItem("products", JSON.stringify(prods));
-  }, [prods]);
+  const { prods } = useSelector((state) => state.products);
+  console.log(prods);
 
   const onClickButtonEdit = (id) => {
     navigate(`/detail/${id}`, { replace: true });
   };
 
+  const handleClickAdd = () => {
+    navigate(`/product/formprod`, { replace: true });
+  };
+
+  const handleClickDelete = (id) => {
+    dispatch(productsSlice.actions.deleteProduct(id));
+  };
   return (
     <div style={{ height: 400, width: "100%" }}>
+      <Button
+        variant="contained"
+        color="success"
+        sx={{ margin: "10px 0" }}
+        onClick={() => {
+          handleClickAdd();
+        }}
+      >
+        Add Product
+      </Button>
       <table className="table table-striped">
         <thead>
           <tr>
@@ -84,7 +63,7 @@ export default function Product(props) {
                 <IconButton onClick={() => onClickButtonEdit(prod.id)}>
                   <EditIcon color="primary" />
                 </IconButton>
-                <IconButton>
+                <IconButton onClick={() => handleClickDelete(prod.id)}>
                   <DeleteIcon color="error" />
                 </IconButton>
               </td>

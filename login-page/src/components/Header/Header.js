@@ -11,8 +11,8 @@ export default function Header() {
       {/* Links */}
       <ul className="navbar-nav">
         {["home", "about", "product", "login"].map((text, index) => (
-          <li className="nav-item">
-            <NavLink key={index} className="nav-link" to={`/${text}`}>
+          <li className="nav-item" key={index}>
+            <NavLink className="nav-link" to={`/${text}`}>
               {text.charAt(0).toUpperCase()}
               {text.slice(1)}
             </NavLink>

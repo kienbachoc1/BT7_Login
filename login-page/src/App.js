@@ -8,6 +8,7 @@ import { Route, Routes } from "react-router-dom";
 import HomeTemplate from "./templates/HomeTemplate";
 import { useState } from "react";
 import PrivateRoute from "./components/Route/PrivateRoute";
+import FormProduct from "./pages/FormProduct/FormProduct";
 
 function App(props) {
   const [islogged, setIsLogged] = useState(!!localStorage?.getItem("user"));
@@ -19,7 +20,10 @@ function App(props) {
         <Route element={<HomeTemplate />}>
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/product" element={<Product />} />
+          <Route path="/product">
+            <Route index element={<Product />} />
+            <Route path="formprod" element={<FormProduct />} />
+          </Route>
           <Route path="/detail/:id" element={<Detail />} />
         </Route>
       </Route>
