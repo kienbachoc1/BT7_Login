@@ -57,5 +57,11 @@ export default createSlice({
     deleteProduct: (state, action) => {
       state.prods = state.prods.filter((prod) => prod.id !== action.payload);
     },
+    updateProduct: (state, action) => {
+      const index = state.prods.findIndex(
+        (item) => item.id === action.payload.id
+      );
+      state.prods[index] = action.payload;
+    },
   }, // => { type:'products/addProduct' }
 });

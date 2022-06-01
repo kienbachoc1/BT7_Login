@@ -22,7 +22,7 @@ function App(props) {
           <Route path="/about" element={<About />} />
           <Route path="/product">
             <Route index element={<Product />} />
-            <Route path="formprod" element={<FormProduct />} />
+            <Route path="formprod/:id" element={<FormProduct />} />
           </Route>
           <Route path="/detail/:id" element={<Detail />} />
         </Route>

@@ -10,8 +10,8 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 // import { v4 as uuidv4 } from "uuid";
@@ -23,9 +23,11 @@ export default function FormProduct() {
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState("");
   const [supplier, setSupplier] = useState("");
+  let { id } = useParams();
 
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
     control,
@@ -39,7 +41,14 @@ export default function FormProduct() {
     },
   });
 
+  useEffect(() => {
+    let result = prods.prods.find((prod) => prod.id === +id);
+    console.log(result);
+    reset(result);
+  }, []);
+
   const prods = useSelector(productsSelector);
+  console.log("data:", prods.prods);
 
   const handleClickCancel = () => {
     navigate(`/product`, { replace: true });
@@ -47,13 +56,23 @@ export default function FormProduct() {
 
   const onSubmit = (data) => {
     navigate(`/product`, { replace: true });
-    dispatch(
-      productsSlice.actions.addProduct({
-        ...data,
-        id: prods.prods.length + 1,
-      })
-    );
+    if (+id === 0) {
+      dispatch(
+        productsSlice.actions.addProduct({
+          ...data,
+          id: prods.prods.length + 1,
+        })
+      );
+    } else {
+      dispatch(
+        productsSlice.actions.updateProduct({
+          ...data,
+          id: +id,
+        })
+      );
+    }
   };
+
   return (
     <div>
       <Container maxWidth="sm">
@@ -146,8 +165,8 @@ export default function FormProduct() {
                   >
                     <InputLabel>Supplier</InputLabel>
                     <Select {...field} label="supplier" defaultValue={supplier}>
-                      <MenuItem value="Samsung">Samsung</MenuItem>
-                      <MenuItem value="Apple">Apple</MenuItem>
+                      <MenuItem value="samsung">Samsung</MenuItem>
+                      <MenuItem value="apple">Apple</MenuItem>
                     </Select>
                     <FormHelperText>
                       {errors?.supplier ? errors.supplier.message : null}
@@ -163,7 +182,7 @@ export default function FormProduct() {
             color="success"
             sx={{ marginRight: "10px" }}
           >
-            Add
+            {+id !== 0 ? "Update" : "Add"}
           </Button>
           <Button
             type="button"

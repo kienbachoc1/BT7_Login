@@ -13,14 +13,13 @@ export default function Product(props) {
   const navigate = useNavigate();
 
   const { prods } = useSelector((state) => state.products);
-  console.log(prods);
 
   const onClickButtonEdit = (id) => {
-    navigate(`/detail/${id}`, { replace: true });
+    navigate(`/product/formprod/${id}`, { replace: true });
   };
 
   const handleClickAdd = () => {
-    navigate(`/product/formprod`, { replace: true });
+    navigate(`/product/formprod/0`, { replace: true });
   };
 
   const handleClickDelete = (id) => {
