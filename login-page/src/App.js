@@ -12,6 +12,7 @@ import FormProduct from "./pages/FormProduct/FormProduct";
 
 function App(props) {
   const [islogged, setIsLogged] = useState(!!localStorage?.getItem("user"));
+  
   return (
     <Routes>
       <Route path="/login" element={<SignUp setIsLogged={setIsLogged} />} />
@@ -27,7 +28,7 @@ function App(props) {
           <Route path="/detail/:id" element={<Detail />} />
         </Route>
       </Route>
-      <Route path="/*" element={<h1>There's nothing here: 404!</h1>} />
+      <Route path="/*" element={<h1>There's nothing here: 404!</h1>} /> 
     </Routes>
   );
 }
